@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Caro</title>
+    <style>
+        td {
+            height: 50px;
+            width: 50px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <table border="1">
+        <tr>
+            <td id="1" class="content"></td>
+            <td id="2" class="content"></td>
+            <td id="3" class="content"></td>
+        </tr>
+        <tr>
+            <td id="4" class="content"></td>
+            <td id="5" class="content"></td>
+            <td id="6" class="content"></td>
+        </tr>
+        <tr>
+            <td id="7" class="content"></td>
+            <td id="8" class="content"></td>
+            <td id="9" class="content"></td>
+        </tr>
+
+    </table>
+
+    <button onclick="resetAll()">Reset All</button>
+
+    <script>
+        const winner = [
+            [1, 2, 3],
+            [1, 4, 7],
+            [1, 5, 9],
+            [2, 5, 8],
+            [3, 5, 7],
+            [3, 6, 9],
+            [4, 5, 6],
+            [7, 8, 9]
+        ];
+        var player1 = [];
+        var player2 = [];
+        const gaps = document.querySelectorAll(".content");
+
+        function check(player) {
+            for (let index = 0; index < winner.length; index++) {
+                let op = winner[index].every(element => player.indexOf(element) > -1);
+                if (op == true) {
+                    return op;
+                }
+            }
+        }
+
+        function resetAll() {
+            gaps.forEach(gap => {
+                document.getElementById(`${gap.id}`).classList.remove("clicked");
+                document.getElementById(`${gap.id}`).innerHTML = "";
+            })
+            this.player1 = [];
+            this.player2 = [];
+        }
+
+        function tickX(id) {
+            if (document.getElementById(id).classList.contains("clicked")) {
+
+            } else {
+                document.getElementById(id).innerHTML = "x";
+                setTimeout(function () {
+                    document.getElementById(id).classList.add("clicked");
+                }, 350);
+                player1.push(parseInt(id));
+                console.log("player1: " + player1)
+
+                if(check(player1)){
+                    alert("Play 1 win");
+                    setTimeout(resetAll,500)
+                  //  resetAll();
+                }
+            }
+        }
+
+        function tickO(id) {
+            if (document.getElementById(id).classList.contains("clicked")) {
+
+            } else {
+                document.getElementById(id).innerHTML = "o";
+                document.getElementById(id).classList.add("clicked");
+               
+                player1.pop();
+                player1.pop();
+                player2.push(parseInt(id));
+                console.log("Player2: "+player2)
+                if(check(player2)){
+                    alert("Play 2 win");
+                    setTimeout(resetAll,500)
+                 //   resetAll();
+                }
+
+            }
+        }
+
+        var clickCount = 0;
+        gaps.forEach(gap => gap.addEventListener('click', function(){
+            clickCount++;
+            if (clickCount === 1) {
+                singleClickTimer = setTimeout(function(){
+                    clickCount = 0;
+                    tickX(gap.id);
+                }, 300);
+            } else if (clickCount === 2) {
+                clearTimeout(singleClickTimer);
+                clickCount = 0;
+                tickO(gap.id);
+            }
+        }, false))
+    </script>
+</body>
+
+</html>
